@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Food App</string>
+    <string name="welcome_to_food_app">Welcome to Food App</string>
+    <string name="login">Login</string>
+    <string name="signup">Signup</string>
+    <string name="email_addres">Email addres</string>
+    <string name="email_adress">Email adress</string>
+    <string name="password">Password</string>
+    <string name="welcome">Welcome</string>
+    <string name="default_web_client_id">53640248680-u1ktffvekmj67akblucf3fdgu2nab8eu.apps.googleusercontent.com</string>
+    <string name="email_address" >Email</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="birthday">Birthday</string>
+    <string name="location">Location</string>
+    <string name="phone_number">Phone</string>
+    <string name="already_a_user">Already a user</string>
+    <string name="name">Name</string>
+    <string name="get_location">Get location\n</string>
+
+    <string name="forget_password">Forget Password?</string>
+    <string name="not_a_user">You arent a user?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="logo">Logo</string>
+    <string name="edit">Edit</string>
+    <string name="address">Address</string>
+</resources>

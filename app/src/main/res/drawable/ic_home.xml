@@ -1,0 +1,7 @@
+<!-- bottom_navigation_item_color.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Mục được chọn -->
+    <item android:color="#FF5733" android:state_checked="true" />
+    <!-- Mục không được chọn -->
+    <item android:color="#FFFFFF" />
+</selector>
