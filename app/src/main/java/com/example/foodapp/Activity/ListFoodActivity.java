@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.example.foodapp.Adapter.FoodListAdapter;
 import com.example.foodapp.Domain.Foods;
 import com.example.foodapp.R;

@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -69,12 +70,12 @@ public class SignupActivity extends AppCompatActivity {
             String phone = binding.PhoneUserTxt.getText().toString().trim();
             String birthday = binding.BirthUserTxt.getText().toString().trim();
             String location = binding.locationUserTxt.getText().toString().trim();
-
             // Kiểm tra các trường bắt buộc
             if (email.isEmpty() || password.isEmpty() || name.isEmpty() || gender.isEmpty() || phone.isEmpty() || birthday.isEmpty() || location.isEmpty()) {
                 Toast.makeText(SignupActivity.this, "Vui lòng điền đầy đủ thông tin bắt buộc", Toast.LENGTH_SHORT).show();
                 return;
             }
+
 
             // Tạo người dùng với email và mật khẩu
             mAuth.createUserWithEmailAndPassword(email, password)
@@ -85,7 +86,7 @@ public class SignupActivity extends AppCompatActivity {
                             if (user != null) {
                                 // Gửi email xác thực
                                 sendEmailVerification(user);
-
+                                // Lấy FCM token
                                 Boolean role = false;
                                 saveUserToDatabase(user.getUid(), name, email, gender, phone, birthday, location, role);
                                 startActivity(new Intent(SignupActivity.this, LoginActivity.class));

@@ -1,5 +1,6 @@
 package com.example.foodapp.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -11,14 +12,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodapp.Activity.OrderDetailActivity;
 import com.example.foodapp.Domain.Order;
 import com.example.foodapp.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +32,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
     private ArrayList<Order> items;
     private Context context;
     private String orderKey;
+
     public OrderListAdapter(ArrayList<Order> items) {
         this.items = items;
     }
@@ -44,6 +45,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
         return new ViewHolder(view);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order order = items.get(position);
@@ -52,19 +54,20 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
         holder.locationTxt.setText(order.getLocation());
         holder.totalPriceTxt.setText("$" + order.getTotalPrice());
         holder.noteTxt.setText(order.getNote());
+
         switch (order.getStatus()) {
             case ACCEPTED:
-                holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.green));
+                holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.green));
                 holder.rejectBtn.setVisibility(View.GONE);
                 holder.acceptBtn.setVisibility(View.GONE);
                 break;
             case REJECTED:
-                holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.red));
                 holder.acceptBtn.setVisibility(View.GONE);
                 holder.rejectBtn.setVisibility(View.GONE);
                 break;
             default:
-                holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.grey));
+                holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.grey));
                 holder.acceptBtn.setVisibility(View.VISIBLE);
                 holder.rejectBtn.setVisibility(View.VISIBLE);
                 break;
@@ -81,7 +84,6 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
         Order orderItem = items.get(position);
         orderItem.setStatus(status);
         orderKey = orderItem.getKey();
-
         Query orderQuery = FirebaseDatabase.getInstance().getReference("Orders").orderByChild("key").equalTo(orderKey);
 
         orderQuery.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -95,7 +97,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
                         orderRef.child("status").setValue(status)
                                 .addOnSuccessListener(aVoid -> {
                                     Intent intent = new Intent(context, OrderDetailActivity.class);
-                                    intent.putExtra("orderId", orderId);
+                                    intent.putExtra("orderKey", orderKey);
                                     context.startActivity(intent);
                                 })
                                 .addOnFailureListener(e -> Toast.makeText(context, "Failed to update status. Please try again.", Toast.LENGTH_SHORT).show());
@@ -111,6 +113,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
             }
         });
     }
+
     private void openOrderDetail(int position) {
         if (position == RecyclerView.NO_POSITION) return;
         Order orderItem = items.get(position);
@@ -128,7 +131,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView userNameTxt, phoneTxt, locationTxt, totalPriceTxt, noteTxt;
         Button acceptBtn, rejectBtn;
-
+        CardView cardView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             userNameTxt = itemView.findViewById(R.id.userNameTxt);
@@ -138,6 +141,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
             noteTxt = itemView.findViewById(R.id.noteTxt);
             acceptBtn = itemView.findViewById(R.id.acceptBtn);
             rejectBtn = itemView.findViewById(R.id.rejectBtn);
+            cardView=itemView.findViewById(R.id.cardView);
         }
     }
 }

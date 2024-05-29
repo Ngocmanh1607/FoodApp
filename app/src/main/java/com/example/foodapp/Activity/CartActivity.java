@@ -1,5 +1,7 @@
 package com.example.foodapp.Activity;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,13 +40,14 @@ public class CartActivity extends AppCompatActivity {
     private DatabaseReference ordersRef;
     private double tax;
     private double total;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding= ActivityCartBinding.inflate(getLayoutInflater());
+        binding = ActivityCartBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        managmentCart=new ManagmentCart(this);
+        managmentCart = new ManagmentCart(this);
 
         setVariable();
         calculateCart();
@@ -52,50 +55,46 @@ public class CartActivity extends AppCompatActivity {
     }
 
     private void initList() {
-        if(managmentCart.getListCart().isEmpty()){
+        if (managmentCart.getListCart().isEmpty()) {
             binding.emptyTxt.setVisibility(View.VISIBLE);
             binding.scrollviewCart.setVisibility(View.GONE);
-        }
-        else{
-
+        } else {
             binding.emptyTxt.setVisibility(View.GONE);
             binding.scrollviewCart.setVisibility(View.VISIBLE);
         }
 
-        LinearLayoutManager linearLayoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         binding.cardView.setLayoutManager(linearLayoutManager);
-        adapter= new CartAdapter(managmentCart.getListCart(), this, () -> calculateCart());
+        adapter = new CartAdapter(managmentCart.getListCart(), this, () -> calculateCart());
         binding.cardView.setAdapter(adapter);
     }
 
     private void calculateCart() {
-        double percenTax=0.02;
-        double delivery=10;
+        double percenTax = 0.02;
+        double delivery = 10;
 
-        tax=Math.round(managmentCart.getTotalFee()*percenTax*100.0)/100;
+        tax = Math.round(managmentCart.getTotalFee() * percenTax * 100.0) / 100;
 
-        total = Math.round((managmentCart.getTotalFee()+tax+delivery)*100)/100;
-        double itemTotal=Math.round(managmentCart.getTotalFee()*100)/100;
+        total = Math.round((managmentCart.getTotalFee() + tax + delivery) * 100) / 100;
+        double itemTotal = Math.round(managmentCart.getTotalFee() * 100) / 100;
 
-        binding.totalFeeTxt.setText("$"+itemTotal);
-        binding.deliveryTxt.setText("$"+delivery);
-        binding.totalTxt.setText("$"+total);
+        binding.totalFeeTxt.setText("$" + itemTotal);
+        binding.deliveryTxt.setText("$" + delivery);
+        binding.totalTxt.setText("$" + total);
     }
 
     private void setVariable() {
-        binding.backBtn.setOnClickListener(v->finish());
+        binding.backBtn.setOnClickListener(v -> finish());
 
         binding.oderBtn.setOnClickListener(v -> placeOrder());
     }
 
     private void placeOrder() {
         if (!managmentCart.getListCart().isEmpty()) {
-            // Kiểm tra xem người dùng đã đăng nhập hay chưa
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             if (currentUser != null) {
-                String userId = currentUser.getUid(); // Lấy ID của người dùng đã đăng nhập
+                String userId = currentUser.getUid();
 
-                // Lấy thông tin người dùng từ Firebase Realtime Database
                 DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("User").child(userId);
                 userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -119,25 +118,21 @@ public class CartActivity extends AppCompatActivity {
                             order.setStatus(Order.Status.PENDING);
 
                             String note = binding.noteTxt.getText().toString();
-                            order.setNote(note != null ? note : ""); // Ensure note is not null
+                            order.setNote(note != null ? note : "");
 
-                            // Lấy danh sách món ăn từ giỏ hàng
                             List<Foods> cartItems = managmentCart.getListCart();
 
-                            // Tạo danh sách mới chứa thông tin đơn hàng
                             List<OrderItem> orderItems = new ArrayList<>();
                             for (Foods item : cartItems) {
-                                // Tạo đối tượng OrderItem với thông tin tên, số lượng và ngày giờ đặt hàng
                                 OrderItem orderItem = new OrderItem(item.getTitle(), item.getNumberInCart(), item.getImagePath());
                                 orderItems.add(orderItem);
                             }
                             order.setlOrderItem(orderItems);
-                            order.setTotalPrice(total); // Ensure 'total' is properly calculated and non-null
+                            order.setTotalPrice(total);
 
                             String currentDateTime = getCurrentDateTime();
                             order.setDateTime(currentDateTime);
 
-                            // Tham chiếu đến Firebase Realtime Database và lưu đơn hàng
                             DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference().child("Orders");
                             String orderId = ordersRef.push().getKey();
                             order.setKey(key_user);
@@ -145,7 +140,7 @@ public class CartActivity extends AppCompatActivity {
                             if (orderId != null) {
                                 ordersRef.child(orderId).setValue(order)
                                         .addOnSuccessListener(aVoid -> {
-                                            managmentCart.clearCart(); // Ensure clearCart is thread-safe
+                                            managmentCart.clearCart();
                                             Toast.makeText(CartActivity.this, "Order placed successfully!", Toast.LENGTH_SHORT).show();
 
                                             Intent intent = new Intent(CartActivity.this, MainActivity.class);
@@ -180,8 +175,8 @@ public class CartActivity extends AppCompatActivity {
         } else {
             Toast.makeText(CartActivity.this, "Your cart is empty!", Toast.LENGTH_SHORT).show();
         }
-
     }
+
     private String getCurrentDateTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Date date = new Date();
