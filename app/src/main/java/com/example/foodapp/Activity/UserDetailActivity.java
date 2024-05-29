@@ -70,7 +70,9 @@ public class UserDetailActivity extends AppCompatActivity {
         binding.listOrderTxt.setOnClickListener(this::showPopupMenu);
 
         // Thiết lập sự kiện click cho nút quay lại để kết thúc activity
-        binding.btnBack.setOnClickListener(v -> finish());
+        binding.btnBack.setOnClickListener(v -> {
+            startActivity(new Intent(UserDetailActivity.this, MainActivity.class));
+            finish();});
 
         // Thiết lập sự kiện long click cho văn bản địa chỉ để lấy vị trí hiện tại
         binding.AddressTxt.setOnLongClickListener(v -> {

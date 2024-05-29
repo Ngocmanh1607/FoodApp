@@ -1,5 +1,6 @@
 package com.example.foodapp.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -47,7 +48,9 @@ public class ListUserOrderActivity extends AppCompatActivity {
         initList();
 
         // Thiết lập sự kiện click cho nút quay lại
-        binding.backBtn.setOnClickListener(v -> finish());
+        binding.backBtn.setOnClickListener(v -> {
+            startActivity(new Intent(ListUserOrderActivity.this, UserDetailActivity.class));
+            finish();});
     }
 
     /**
