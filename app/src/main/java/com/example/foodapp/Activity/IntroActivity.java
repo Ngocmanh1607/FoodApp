@@ -32,7 +32,7 @@ public class IntroActivity extends AppCompatActivity {
         setVariable();
         getWindow().setStatusBarColor(Color.parseColor("#FFE4B5"));
     }
-
+    //Khỏi tạo các biến
     private void setVariable() {
         binding.loginBtn.setOnClickListener(v -> {
             if (mAuth.getCurrentUser() != null) {
@@ -44,7 +44,7 @@ public class IntroActivity extends AppCompatActivity {
         });
         binding.signupBtn.setOnClickListener(v -> startActivity(new Intent(IntroActivity.this, SignupActivity.class)));
     }
-
+    //Kiểm tra quyền của người dùng
     private void checkUserRole(String userId) {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("User").child(userId);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {

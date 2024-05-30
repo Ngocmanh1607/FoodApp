@@ -252,6 +252,16 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/categoryView"
                     app:layout_constraintTop_toTopOf="@+id/categoryView" />
+
+                <ImageView
+                    android:id="@+id/phone"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:srcCompat="@drawable/phone" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>

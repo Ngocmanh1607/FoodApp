@@ -45,7 +45,7 @@ public class AddFoodActivity extends AppCompatActivity {
     private DatabaseReference database;
     private StorageReference storageReference;
     private List<Category> categoryList = new ArrayList<>();
-    private int nextFoodId = 1; // Initialize the next food ID to 1
+    private int nextFoodId = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +91,7 @@ public class AddFoodActivity extends AppCompatActivity {
             }
         });
     }
+    // Hàm kiểm tra dữ liệu đầu vào
     private boolean validateInput(EditText etTitle, EditText etDescription, EditText etPrice, EditText etTimeValue, CheckBox bestFood) {
         String title = etTitle.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
@@ -153,6 +154,7 @@ public class AddFoodActivity extends AppCompatActivity {
 
         return true;
     }
+    // Tải ảnh và lưu món ăn vào cơ sở dữ liệu
     private void uploadImageAndSaveFood(String title, String description, double price, int timeValue, Category category,boolean bestfood) {
         StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(selectedImageUri));
 
@@ -161,7 +163,7 @@ public class AddFoodActivity extends AppCompatActivity {
             saveFoodToDatabase(title, description, price, timeValue, category, imageUrl,bestfood);
         })).addOnFailureListener(e -> Toast.makeText(AddFoodActivity.this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
-
+    //lưu món ăn vào cơ sở dữ liệu
     private void saveFoodToDatabase(String title, String description, double price, int timeValue, Category category, String imageUrl,boolean bestfood) {
         Double star=5.0;
         int priceId = (price < 10) ? 0 : (price < 30) ? 1 : 2;
@@ -191,7 +193,7 @@ public class AddFoodActivity extends AppCompatActivity {
             }
         });
     }
-
+    // Chuyển đổi tên trường để lưu trên firebase
     private Map<String, Object> capitalizeFieldNames(Foods food) {
         Map<String, Object> foodMap = new HashMap<>();
         foodMap.put("Id", food.getId());
@@ -207,7 +209,7 @@ public class AddFoodActivity extends AppCompatActivity {
         foodMap.put("BestFood", food.isBestFood());
         return foodMap;
     }
-
+    // Lấy ID món ăn tiếp theo
     private void fetchNextFoodId() {
         database.child("Foods").orderByKey().limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -231,6 +233,7 @@ public class AddFoodActivity extends AppCompatActivity {
     private String getFileExtension(Uri uri) {
         return getContentResolver().getType(uri).split("/")[1];
     }
+    // Tải danh sách loại món ăn
     private void loadCategories() {
         database.child("Category").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
