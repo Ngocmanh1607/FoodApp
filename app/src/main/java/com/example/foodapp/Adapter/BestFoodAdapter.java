@@ -25,50 +25,61 @@ public class BestFoodAdapter extends RecyclerView.Adapter<BestFoodAdapter.viewho
     ArrayList<Foods> items;
     Context context;
 
+    // Constructor để khởi tạo danh sách các món ăn
     public BestFoodAdapter(ArrayList<Foods> items) {
         this.items = items;
     }
 
-
+    // Phương thức để tạo và gán ViewHolder cho mỗi item trong RecyclerView
     @NonNull
     @Override
     public BestFoodAdapter.viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context=parent.getContext();
-        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_best_deal,parent,false);
+        context = parent.getContext(); // Lấy context từ parent
+        // Inflate layout viewholder cho mỗi item
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_best_deal, parent, false);
 
         return new viewholder(inflate);
     }
 
+    // Phương thức để gán dữ liệu cho mỗi ViewHolder
     @Override
     public void onBindViewHolder(@NonNull BestFoodAdapter.viewholder holder, int position) {
+        // Gán các giá trị từ items vào các TextView và ImageView
         holder.titleTxt.setText(items.get(position).getTitle());
-        holder.priceTxt.setText("$"+items.get(position).getPrice());
-        holder.timeTxt.setText(items.get(position).getTimeValue()+"min");
-        holder.starTxt.setText(""+items.get(position).getStar());
-        Glide.with(context).load(items.get(position).getImagePath()).transform(new CenterCrop(),new RoundedCorners(30)).into(holder.pic);
+        holder.priceTxt.setText("$" + items.get(position).getPrice());
+        holder.timeTxt.setText(items.get(position).getTimeValue() + "min");
+        holder.starTxt.setText("" + items.get(position).getStar());
 
+        // Sử dụng thư viện Glide để tải và hiển thị hình ảnh với hiệu ứng cắt và bo góc
+        Glide.with(context).load(items.get(position).getImagePath()).transform(new CenterCrop(), new RoundedCorners(30)).into(holder.pic);
+
+        // Đặt sự kiện click cho mỗi item để chuyển sang DetailActivity
         holder.itemView.setOnClickListener(v -> {
-            Intent intent=new Intent(context, DetailActivity.class);
-            intent.putExtra("object",items.get((position)));
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("object", items.get(position));
             context.startActivity(intent);
         });
     }
 
+    // Phương thức để trả về số lượng item trong danh sách
     @Override
     public int getItemCount() {
         return items.size();
     }
 
-    public class viewholder extends  RecyclerView.ViewHolder{
-        TextView titleTxt,priceTxt,starTxt,timeTxt;
+    // Lớp ViewHolder để giữ các view cho mỗi item
+    public class viewholder extends RecyclerView.ViewHolder {
+        TextView titleTxt, priceTxt, starTxt, timeTxt;
         ImageView pic;
+
+        // Constructor để khởi tạo các view
         public viewholder(@NonNull View itemView) {
             super(itemView);
-            titleTxt=itemView.findViewById(R.id.titleTxt);
-            priceTxt=itemView.findViewById(R.id.priceTxt);
-            starTxt=itemView.findViewById(R.id.startTxt);
-            timeTxt=itemView.findViewById(R.id.timeTxt);
-            pic=itemView.findViewById(R.id.pic);
+            titleTxt = itemView.findViewById(R.id.titleTxt);
+            priceTxt = itemView.findViewById(R.id.priceTxt);
+            starTxt = itemView.findViewById(R.id.startTxt);
+            timeTxt = itemView.findViewById(R.id.timeTxt);
+            pic = itemView.findViewById(R.id.pic);
         }
     }
 }

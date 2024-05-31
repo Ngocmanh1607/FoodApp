@@ -5,30 +5,28 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.foodapp.Activity.ListUserOrderActivity;
 import com.example.foodapp.Activity.OrderDetailActivity;
 import com.example.foodapp.Domain.Order;
-import com.example.foodapp.Domain.OrderItem;
 import com.example.foodapp.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapter.ViewHolder> {
     private ArrayList<Order> items;
     private Context context;
     private String orderKey;
 
+    // Constructor để khởi tạo adapter với danh sách các đơn hàng
     public HistoryOrderAdapter(ArrayList<Order> items) {
         this.items = items;
     }
 
+    // Phương thức tạo ViewHolder cho RecyclerView
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -37,6 +35,7 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
         return new ViewHolder(view);
     }
 
+    // Phương thức gắn dữ liệu vào ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Order order = items.get(position);
@@ -45,10 +44,11 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
         holder.timeTxt.setText(order.getDateTime());
         holder.noteTxt.setText(order.getNote());
         holder.totalTxt.setText("$" + order.getTotalPrice());
-        orderKey=order.getKey();
-        String orderDate=order.getDateTime();
+        orderKey = order.getKey();
+        String orderDate = order.getDateTime();
         String status = "";
 
+        // Xác định trạng thái của đơn hàng và đặt giá trị tương ứng cho status
         switch (order.getStatus()) {
             case PENDING:
                 status = "Pending";
@@ -62,18 +62,22 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
         }
 
         holder.statusTxt.setText(status);
+
+        // Thiết lập sự kiện click để mở chi tiết đơn hàng
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, OrderDetailActivity.class);
-            intent.putExtra("orderDate",orderDate);
+            intent.putExtra("orderDate", orderDate);
             context.startActivity(intent);
         });
     }
 
+    // Phương thức trả về số lượng đơn hàng trong danh sách
     @Override
     public int getItemCount() {
-        return items.size(); // Trả về số lượng đơn hàng trong danh sách
+        return items.size();
     }
 
+    // ViewHolder để chứa các thành phần của item view
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView timeTxt, noteTxt, totalTxt, statusTxt;
 

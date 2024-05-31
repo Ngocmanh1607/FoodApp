@@ -20,66 +20,70 @@ import com.example.foodapp.R;
 
 import java.util.ArrayList;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.viewholder>
-{
-    ArrayList<Foods> list;
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
+    private ArrayList<Foods> list;
     private ManagmentCart managmentCart;
-    ChangeNumberItemsListener changeNumberItemsListener;
+    private ChangeNumberItemsListener changeNumberItemsListener;
 
-    public CartAdapter(ArrayList<Foods> list, Context context,ChangeNumberItemsListener changeNumberItemsListener) {
+    public CartAdapter(ArrayList<Foods> list, Context context, ChangeNumberItemsListener changeNumberItemsListener) {
         this.list = list;
-        managmentCart=new ManagmentCart(context);
+        managmentCart = new ManagmentCart(context);
         this.changeNumberItemsListener = changeNumberItemsListener;
     }
 
+    // Tạo ViewHolder cho RecyclerView
     @NonNull
     @Override
-    public CartAdapter.viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_cart,parent,false);
-        return new viewholder(inflate);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_cart, parent, false);
+        return new ViewHolder(inflate);
     }
 
+    // Liên kết dữ liệu với ViewHolder
     @Override
-    public void onBindViewHolder(@NonNull CartAdapter.viewholder holder, int position) {
-        holder.title.setText(list.get(position).getTitle());
-        holder.feeEachItem.setText("$"+list.get(position).getNumberInCart()*list.get(position).getPrice());
-        holder.totalEachItem.setText(list.get(position).getNumberInCart()+"*$"+(list.get(position).getPrice()));
-        holder.num.setText(list.get(position).getNumberInCart()+"");
-        Glide.with(holder.itemView.getContext()).load(list.get(position).getImagePath()).transform(new CenterCrop(),new RoundedCorners(30)).into(holder.pic);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Foods food = list.get(position);
+        holder.title.setText(food.getTitle());
+        holder.feeEachItem.setText("$" + food.getNumberInCart() * food.getPrice());
+        holder.totalEachItem.setText(food.getNumberInCart() + "*$" + (food.getPrice()));
+        holder.num.setText(String.valueOf(food.getNumberInCart()));
+        Glide.with(holder.itemView.getContext()).load(food.getImagePath()).transform(new CenterCrop(), new RoundedCorners(30)).into(holder.pic);
 
+        // Xử lý sự kiện tăng số lượng
         holder.plusItem.setOnClickListener(v -> managmentCart.plusNumberItem(list, position, () -> {
             notifyDataSetChanged();
             changeNumberItemsListener.change();
         }));
 
+        // Xử lý sự kiện giảm số lượng
         holder.minusItem.setOnClickListener(v -> managmentCart.minusNumberItem(list, position, () -> {
             notifyDataSetChanged();
             changeNumberItemsListener.change();
         }));
-
     }
 
+    // Trả về số lượng mục trong danh sách
     @Override
     public int getItemCount() {
         return list.size();
     }
 
-    public class viewholder extends RecyclerView.ViewHolder{
-
-        TextView title,feeEachItem,plusItem,minusItem,note;
+    // Lớp ViewHolder để quản lý các thành phần giao diện của một mục trong danh sách
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView title, feeEachItem, plusItem, minusItem, note;
         ImageView pic;
-        TextView totalEachItem,num;
-        public viewholder(@NonNull View itemView) {
-            super(itemView);
-            note=itemView.findViewById(R.id.noteTxt);
-            title=itemView.findViewById(R.id.titleTxt);
-            pic=itemView.findViewById(R.id.pic);
-            feeEachItem=itemView.findViewById(R.id.feeEachItem);
-            plusItem=itemView.findViewById(R.id.plusCartBtn);
-            minusItem=itemView.findViewById(R.id.minusCartBtn);
-            totalEachItem=itemView.findViewById(R.id.totalEachItem);
-            num=itemView.findViewById(R.id.numberItemTxt);
+        TextView totalEachItem, num;
 
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            note = itemView.findViewById(R.id.noteTxt);
+            title = itemView.findViewById(R.id.titleTxt);
+            pic = itemView.findViewById(R.id.pic);
+            feeEachItem = itemView.findViewById(R.id.feeEachItem);
+            plusItem = itemView.findViewById(R.id.plusCartBtn);
+            minusItem = itemView.findViewById(R.id.minusCartBtn);
+            totalEachItem = itemView.findViewById(R.id.totalEachItem);
+            num = itemView.findViewById(R.id.numberItemTxt);
         }
     }
 }

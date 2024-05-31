@@ -22,13 +22,18 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
     private ArrayList<OrderItem> items;
     private Context context;
 
+    // Constructor để khởi tạo adapter với danh sách chi tiết đơn hàng
     public OrderDetailAdapter(ArrayList<OrderItem> items) {
         this.items = items;
     }
+
+    // Phương thức cập nhật dữ liệu và thông báo cho adapter thay đổi
     public void updateData(ArrayList<OrderItem> newItems) {
         items = newItems;
         notifyDataSetChanged();
     }
+
+    // Phương thức tạo ViewHolder cho RecyclerView
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -37,6 +42,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         return new ViewHolder(view);
     }
 
+    // Phương thức gắn dữ liệu vào ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         OrderItem orderItem = items.get(position);
@@ -51,11 +57,13 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
                 .into(holder.pic);
     }
 
+    // Phương thức trả về số lượng chi tiết đơn hàng
     @Override
     public int getItemCount() {
         return items.size();
     }
 
+    // ViewHolder để chứa các thành phần của item view
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView titleTxt, numberTxt;
         ImageView pic;

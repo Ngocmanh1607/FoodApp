@@ -33,10 +33,12 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
     private Context context;
     private String orderKey;
 
+    // Constructor để khởi tạo adapter với danh sách đơn hàng
     public OrderListAdapter(ArrayList<Order> items) {
         this.items = items;
     }
 
+    // Phương thức tạo ViewHolder cho RecyclerView
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -45,6 +47,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
         return new ViewHolder(view);
     }
 
+    // Phương thức gắn dữ liệu vào ViewHolder
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -55,6 +58,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
         holder.totalPriceTxt.setText("$" + order.getTotalPrice());
         holder.noteTxt.setText(order.getNote());
 
+        // Cập nhật màu nền và hiển thị các nút dựa trên trạng thái đơn hàng
         switch (order.getStatus()) {
             case ACCEPTED:
                 holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.green));
@@ -73,20 +77,23 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
                 break;
         }
 
+        // Thiết lập sự kiện click cho các nút
         holder.acceptBtn.setOnClickListener(v -> updateOrderStatus(holder.getAdapterPosition(), Order.Status.ACCEPTED));
         holder.rejectBtn.setOnClickListener(v -> updateOrderStatus(holder.getAdapterPosition(), Order.Status.REJECTED));
         holder.itemView.setOnClickListener(v -> openOrderDetail(holder.getAdapterPosition()));
     }
 
+    // Phương thức cập nhật trạng thái đơn hàng
     private void updateOrderStatus(int position, Order.Status status) {
         if (position == RecyclerView.NO_POSITION) return;
 
         Order orderItem = items.get(position);
         orderItem.setStatus(status);
         orderKey = orderItem.getKey();
-        String orderDate=orderItem.getDateTime();
+        String orderDate = orderItem.getDateTime();
         Query orderQuery = FirebaseDatabase.getInstance().getReference("Orders").orderByChild("key").equalTo(orderKey);
 
+        // Thực hiện truy vấn để cập nhật trạng thái đơn hàng trên Firebase
         orderQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -115,6 +122,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
         });
     }
 
+    // Phương thức mở chi tiết đơn hàng
     private void openOrderDetail(int position) {
         if (position == RecyclerView.NO_POSITION) return;
         Order orderItem = items.get(position);
@@ -124,15 +132,18 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
         context.startActivity(intent);
     }
 
+    // Phương thức trả về số lượng đơn hàng
     @Override
     public int getItemCount() {
         return items.size();
     }
 
+    // ViewHolder để chứa các thành phần của item view
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView userNameTxt, phoneTxt, locationTxt, totalPriceTxt, noteTxt;
         Button acceptBtn, rejectBtn;
         CardView cardView;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             userNameTxt = itemView.findViewById(R.id.userNameTxt);
@@ -142,7 +153,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
             noteTxt = itemView.findViewById(R.id.noteTxt);
             acceptBtn = itemView.findViewById(R.id.acceptBtn);
             rejectBtn = itemView.findViewById(R.id.rejectBtn);
-            cardView=itemView.findViewById(R.id.cardView);
+            cardView = itemView.findViewById(R.id.cardView);
         }
     }
 }
