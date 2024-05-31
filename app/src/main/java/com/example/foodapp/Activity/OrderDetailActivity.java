@@ -47,9 +47,9 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     private void initList() {
         // Lấy thông tin đơn hàng từ intent
-        String orderKey = getIntent().getStringExtra("orderKey");
-        if (orderKey != null) {
-            Query orderQuery = FirebaseDatabase.getInstance().getReference("Orders").orderByChild("key").equalTo(orderKey);
+        String orderDate = getIntent().getStringExtra("orderDate");
+        if (orderDate != null) {
+            Query orderQuery = FirebaseDatabase.getInstance().getReference("Orders").orderByChild("dateTime").equalTo(orderDate);
             orderQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -79,7 +79,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                         binding.orderDetail.setLayoutManager(new LinearLayoutManager(OrderDetailActivity.this));
                         binding.orderDetail.setAdapter(adapter);
                     } else {
-                        Log.e("OrderDetailActivity", "Order not found with key: " + orderKey);
+                        Log.e("OrderDetailActivity", "Order not found with key: " + orderDate);
                     }
                 }
 

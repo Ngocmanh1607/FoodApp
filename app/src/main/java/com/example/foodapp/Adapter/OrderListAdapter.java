@@ -84,6 +84,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
         Order orderItem = items.get(position);
         orderItem.setStatus(status);
         orderKey = orderItem.getKey();
+        String orderDate=orderItem.getDateTime();
         Query orderQuery = FirebaseDatabase.getInstance().getReference("Orders").orderByChild("key").equalTo(orderKey);
 
         orderQuery.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -97,7 +98,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
                         orderRef.child("status").setValue(status)
                                 .addOnSuccessListener(aVoid -> {
                                     Intent intent = new Intent(context, OrderDetailActivity.class);
-                                    intent.putExtra("orderKey", orderKey);
+                                    intent.putExtra("orderDate", orderDate);
                                     context.startActivity(intent);
                                 })
                                 .addOnFailureListener(e -> Toast.makeText(context, "Failed to update status. Please try again.", Toast.LENGTH_SHORT).show());
@@ -117,9 +118,9 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
     private void openOrderDetail(int position) {
         if (position == RecyclerView.NO_POSITION) return;
         Order orderItem = items.get(position);
-        orderKey = orderItem.getKey();
+        String orderDate = orderItem.getDateTime();
         Intent intent = new Intent(context, OrderDetailActivity.class);
-        intent.putExtra("orderKey", orderKey);
+        intent.putExtra("orderDate", orderDate);
         context.startActivity(intent);
     }
 

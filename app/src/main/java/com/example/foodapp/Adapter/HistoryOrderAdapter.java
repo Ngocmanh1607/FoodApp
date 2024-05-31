@@ -46,6 +46,7 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
         holder.noteTxt.setText(order.getNote());
         holder.totalTxt.setText("$" + order.getTotalPrice());
         orderKey=order.getKey();
+        String orderDate=order.getDateTime();
         String status = "";
 
         switch (order.getStatus()) {
@@ -61,13 +62,10 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
         }
 
         holder.statusTxt.setText(status);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, OrderDetailActivity.class);
-                intent.putExtra("orderKey",orderKey);
-                context.startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, OrderDetailActivity.class);
+            intent.putExtra("orderDate",orderDate);
+            context.startActivity(intent);
         });
     }
 
@@ -78,7 +76,6 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView timeTxt, noteTxt, totalTxt, statusTxt;
-        RecyclerView listItemRecyclerView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
