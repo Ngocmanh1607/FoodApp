@@ -75,8 +75,6 @@ public class SignupActivity extends AppCompatActivity {
                 Toast.makeText(SignupActivity.this, "Vui lòng điền đầy đủ thông tin bắt buộc", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-
             // Tạo người dùng với email và mật khẩu
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, task -> {
@@ -94,7 +92,7 @@ public class SignupActivity extends AppCompatActivity {
                         } else {
                             // Nếu đăng ký thất bại, hiển thị thông báo lỗi cho người dùng
                             Log.e(TAG, "Đăng ký người dùng thất bại", task.getException());
-                            Toast.makeText(SignupActivity.this, "Xác thực thất bại", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignupActivity.this, "Đăng ký người dùng thất bại", Toast.LENGTH_SHORT).show();
                         }
                     });
         });
